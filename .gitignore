@@ -5,3 +5,6 @@
 /web/js/app.js
 /web/sw.js
 /web/elfeed/
+
+# Go binaries
+/go-server/elfeed-offline-*

@@ -4,7 +4,16 @@
       "Bash(git remote set-url:*)",
       "Bash(git remote add:*)",
       "Bash(git branch:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(bd check:*)",
+      "Bash(go build:*)",
+      "Bash(./elfeed-offline-go:*)",
+      "Bash(chmod:*)",
+      "Bash(bd show:*)",
+      "Bash(go test:*)",
+      "Bash(GOOS=linux GOARCH=arm64 go build:*)",
+      "Bash(bd create:*)",
+      "Bash(curl:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

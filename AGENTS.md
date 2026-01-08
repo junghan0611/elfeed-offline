@@ -180,8 +180,65 @@ bd sync               # Sync with git
 - NEVER say "ready to push when you are" - YOU must push
 - If push fails, resolve and retry until it succeeds
 
+## Go 서버 (신규)
+
+OCaml Dream 서버의 Go 재구현. 표준 라이브러리 기반.
+
+```
+go-server/
+├── main.go          # CLI + HTTPS 서버
+├── proxy.go         # ReverseProxy + HTML 래핑
+├── middleware.go    # BasicAuth + Logger
+├── main_test.go     # 통합 테스트
+└── go.mod
+```
+
+### 빌드 & 실행
+
+```bash
+cd go-server
+go build -o elfeed-offline-go .
+./elfeed-offline-go --no-auth --ssl-cert ../ssl/server.pem --ssl-key ../ssl/server.key
+```
+
+### 인바리언트
+
+1. `/elfeed/*` 요청 → 반드시 업스트림 프록시
+2. `/elfeed/content/*` 응답 → 반드시 HTML 래핑
+3. `--no-auth` 없으면 `/elfeed/*` 인증 필수
+4. SSL 인증서 없으면 서버 시작 불가
+
+## 테스트 명세
+
+### Go 서버 테스트 (main_test.go)
+
+```go
+// 테스트 케이스
+func TestProxyForwardsToUpstream(t *testing.T)     // 프록시 동작
+func TestContentWrapping(t *testing.T)             // HTML 래핑
+func TestBasicAuthRequired(t *testing.T)           // 인증 필수 (/elfeed/*)
+func TestBasicAuthBypass(t *testing.T)             // 정적파일 인증 불필요
+func TestStaticFileServing(t *testing.T)           // 정적 파일 제공
+func TestSSLCertValidation(t *testing.T)           // SSL 인증서 검증
+func TestUpstreamConnectionError(t *testing.T)     // 503 에러 처리
+```
+
+### 테스트 실행
+
+```bash
+cd go-server
+go test -v ./...
+```
+
+### 수동 테스트 체크리스트
+
+- [ ] `curl -k https://localhost:9000/` → 302 /index.html
+- [ ] `curl -k https://localhost:9000/index.html` → HTML
+- [ ] `curl -k https://localhost:9000/elfeed/search?q=test` → JSON (elfeed-web 필요)
+- [ ] `curl -k https://localhost:9000/elfeed/content/abc` → 래핑된 HTML
+
 ## 향후 계획
 
-- [ ] Go 서버로 포팅 (선택적)
+- [x] Go 서버로 포팅
 - [ ] TypeScript 프론트엔드로 재작성 (선택적)
 - [ ] UI 개선 (다크모드, 반응형 등)

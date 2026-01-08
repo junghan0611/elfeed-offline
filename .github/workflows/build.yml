@@ -1,0 +1,33 @@
+name: Build Go Server
+
+on:
+  push:
+    branches: [ko, main]
+    tags: ['v*']
+  pull_request:
+    branches: [ko, main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux]
+        goarch: [amd64, arm64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+      - name: Build
+        working-directory: go-server
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          go build -o elfeed-offline-${{ matrix.goos }}-${{ matrix.goarch }} .
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: elfeed-offline-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: go-server/elfeed-offline-${{ matrix.goos }}-${{ matrix.goarch }}

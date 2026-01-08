@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>Elfeed Offline</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Elfeed RSS Reader - Offline Mobile Interface" />
+    <meta name="theme-color" content="#1a1a2e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <link rel="stylesheet" href="/css/app.css" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+  </head>
+  <body>
+    <!-- 오프라인 상태 표시기 -->
+    <div id="offline-indicator">
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m2 2 20 20" />
+          <path d="M5.782 5.782A7 7 0 0 0 9 19h8.5a4.5 4.5 0 0 0 1.307-.193" />
+          <path d="M21.532 16.5A4.5 4.5 0 0 0 17.5 10h-1.79A7.008 7.008 0 0 0 10 5.07" />
+        </svg>
+        <span id="offline-msg">오프라인 모드</span>
+      </span>
+    </div>
+
+    <!-- 헤더 -->
+    <header>
+      <h1><a href="/">Elfeed Offline</a></h1>
+    </header>
+
+    <!-- 컨트롤 영역 -->
+    <section id="reader-controls">
+      <!-- 검색 영역 -->
+      <div id="search-container">
+        <form id="search-form">
+          <input
+            id="q"
+            type="text"
+            placeholder="@30-days-ago +unread"
+            value="@30-days-ago +unread"
+            autocomplete="off"
+          />
+          <button type="submit">검색</button>
+        </form>
+        <p id="status" class="muted">준비됨</p>
+        <div id="controls">
+          <!-- 읽지 않음 토글 -->
+          <button id="toggle-unread" title="읽지 않음 필터 토글">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12.5V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h7.5" />
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+              <path d="M18 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+              <path d="m22 22-1.5-1.5" />
+            </svg>
+          </button>
+          <!-- 즐겨찾기 토글 -->
+          <button id="toggle-starred" title="즐겨찾기 필터 토글">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
+            </svg>
+          </button>
+          <!-- 모두 읽음 표시 -->
+          <button id="mark-all-read" title="모두 읽음으로 표시">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 1-1.732" />
+              <g transform="matrix(0.75 0 0 0.75 4 0.2)" stroke-width="2.5">
+                <path d="M21.2 8.4c.5.38.8.97.8 1.6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V10a2 2 0 0 1 .8-1.6l8-6a2 2 0 0 1 2.4 0l8 6Z" />
+                <path d="m22 10-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 10" />
+              </g>
+            </svg>
+          </button>
+          <!-- 오프라인 저장 -->
+          <button id="save-offline" title="오프라인 저장">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3" />
+              <path d="M3 5V19A9 3 0 0 0 15 21.84" />
+              <path d="M21 5V8" />
+              <path d="M21 13v8l-4-4" />
+              <path d="m21 21 4-4" />
+              <path d="M3 12A9 3 0 0 0 14.59 14.87" />
+            </svg>
+          </button>
+          <!-- 캐시 삭제 -->
+          <button id="clear-cache" title="캐시 삭제">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18" />
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 엔트리 메타 정보 (읽기 모드에서 표시) -->
+      <nav id="entry-meta">
+        <span id="nav-title"></span>
+        <span id="nav-feed"></span>
+        <div id="entry-nav">
+          <!-- 닫기 -->
+          <button id="close-entry" class="close-btn" disabled title="닫기">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </button>
+          <!-- 읽음 표시 -->
+          <button id="mark-read" disabled title="읽음 표시">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.2 8.4c.5.38.8.97.8 1.6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V10a2 2 0 0 1 .8-1.6l8-6a2 2 0 0 1 2.4 0l8 6Z" />
+              <path d="m22 10-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 10" />
+            </svg>
+          </button>
+          <!-- 읽지 않음 표시 -->
+          <button id="mark-unread" disabled title="읽지 않음 표시">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+            </svg>
+          </button>
+          <!-- 즐겨찾기 -->
+          <button id="star-entry" disabled title="즐겨찾기 추가">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
+            </svg>
+          </button>
+          <!-- 즐겨찾기 해제 -->
+          <button id="unstar-entry" disabled title="즐겨찾기 해제">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8.34 8.34 2 9.27l5 4.87L5.82 21 12 17.77 18.18 21l-.59-3.43" />
+              <path d="M18.42 12.76 22 9.27l-6.91-1L12 2l-1.44 2.91" />
+              <line x1="2" x2="22" y1="2" y2="22" />
+            </svg>
+          </button>
+          <!-- URL 복사 -->
+          <button id="copy-url" disabled title="원본 링크 복사">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+              <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+              <path d="M16 4h2a2 2 0 0 1 2 2v4" />
+              <path d="M21 14H11" />
+              <path d="m15 10-4 4 4 4" />
+            </svg>
+          </button>
+          <!-- 원본 링크 열기 -->
+          <a id="open-original" class="button muted" target="_blank" rel="noopener" title="원본 링크 열기">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6" />
+              <path d="M10 14 21 3" />
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            </svg>
+          </a>
+        </div>
+        <p id="nav-status" class="empty"></p>
+      </nav>
+    </section>
+
+    <!-- 메인 콘텐츠 -->
+    <main>
+      <!-- 피드 목록 사이드바 -->
+      <aside id="results">
+        <div id="loading" class="loading">검색 중...</div>
+        <div id="entries"></div>
+      </aside>
+      <!-- 콘텐츠 영역 -->
+      <section id="reader">
+        <iframe id="content" sandbox="allow-same-origin allow-popups"></iframe>
+      </section>
+    </main>
+
+    <!-- Service Worker 등록 및 앱 스크립트 -->
+    <script>
+      // Service Worker 등록
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('Service Worker 등록 완료:', reg.scope))
+          .catch(err => console.warn('Service Worker 등록 실패:', err));
+      }
+    </script>
+    <script src="/js/app.js"></script>
+  </body>
+</html>

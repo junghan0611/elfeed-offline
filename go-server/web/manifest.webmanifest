@@ -1,0 +1,19 @@
+{
+  "name": "Elfeed Offline",
+  "short_name": "Elfeed",
+  "description": "Elfeed RSS Reader - Offline Mobile Interface",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#e56d25",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23e56d25' width='100' height='100' rx='20'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-size='60' fill='white'>E</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "orientation": "any",
+  "lang": "ko",
+  "categories": ["news", "productivity"]
+}
